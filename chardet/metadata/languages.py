@@ -8,6 +8,8 @@ This code is based on the language metadata from the uchardet project.
 """
 from __future__ import absolute_import, print_function
 
+from string import ascii_letters
+
 
 class Language(object):
     """Metadata about a language useful for training models
@@ -36,6 +38,11 @@ class Language(object):
         self.iso_code = iso_code
         self.use_ascii = use_ascii
         self.charsets = charsets
+        if self.use_ascii:
+            if alphabet:
+                alphabet += ascii_letters
+            else:
+                alphabet = ascii_letters
         self.alphabet = alphabet
         self.wiki_start_pages = wiki_start_pages
 
@@ -184,8 +191,6 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                  use_ascii=False,
                                  charsets=['ISO-8859-3', 'ISO-8859-9',
                                            'WINDOWS-1254'],
-                                 # Alphabet characters: I separate to make
-                                 # missing letters fully visible.
                                  alphabet=(u'abcçdefgğhıijklmnoöprsştuüvyzâîû'
                                            u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZÂÎÛ'),
                                  wiki_start_pages=[u'Ana_Sayfa']),
