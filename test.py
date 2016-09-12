@@ -22,6 +22,7 @@ except ImportError:
 import pytest
 
 import chardet
+from chardet.metadata.languages import LANGUAGES
 
 
 # TODO: Restore Hungarian encodings (iso-8859-2 and windows-1250) after we
@@ -43,8 +44,8 @@ def gen_test_params():
             continue
         # Remove language suffixes from encoding if pressent
         encoding = encoding.lower()
-        for postfix in ['-arabic', '-bulgarian', '-cyrillic', '-greek',
-                        '-hebrew', '-hungarian', '-turkish']:
+        for language in sorted(LANGUAGES.keys()):
+            postfix = '-' + language.lower()
             if encoding.endswith(postfix):
                 encoding = encoding.rpartition(postfix)[0]
                 break
