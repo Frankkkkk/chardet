@@ -43,8 +43,14 @@ class Language(object):
                 alphabet += ascii_letters
             else:
                 alphabet = ascii_letters
-        self.alphabet = alphabet
+        self.alphabet = list(sorted(set(alphabet))) if alphabet else None
         self.wiki_start_pages = wiki_start_pages
+
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__,
+                               ', '.join('{}={!r}'.format(k, v)
+                                         for k, v in self.__dict__.items()
+                                         if not k.startswith('_')))
 
 
 LANGUAGES = {'Arabic': Language(name='Arabic',
@@ -156,7 +162,7 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                   use_ascii=True,
                                   charsets=['ISO-8859-2', 'WINDOWS-1250'],
                                   alphabet=u'ăâîșțĂÂÎȘȚ',
-                                  wiki_start_pages=[u'Wikipedia:Strona_główna']),
+                                  wiki_start_pages=[u'Pagina_principală']),
              'Russian': Language(name='Russian',
                                  iso_code='ru',
                                  use_ascii=False,
@@ -171,7 +177,7 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                 use_ascii=True,
                                 charsets=['ISO-8859-2', 'WINDOWS-1250'],
                                 alphabet=u'áäčďéíĺľňóôŕšťúýžÁÄČĎÉÍĹĽŇÓÔŔŠŤÚÝŽ',
-                                wiki_start_pages=[u'Wikipedia:Strona_główna']),
+                                wiki_start_pages=[u'Hlavná_stránka']),
              'Slovene': Language(name='Slovene',
                                  iso_code='sl',
                                  # Q, W, X, Y are only used for foreign words.
@@ -211,7 +217,7 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                     # scheme has declined dramatically following
                                     # the adoption of Unicode on the World Wide
                                     # Web.
-                                    charsets=['WINDOWS-1258', 'VISCII'],
+                                    charsets=['WINDOWS-1258'],
                                     alphabet=(u'aăâbcdđeêghiklmnoôơpqrstuưvxy'
                                               u'AĂÂBCDĐEÊGHIKLMNOÔƠPQRSTUƯVXY'),
                                     wiki_start_pages=[u'Chữ_Quốc_ngữ']),
