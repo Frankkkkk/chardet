@@ -119,6 +119,16 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                            'WINDOWS-1252'],
                                  alphabet=u'ñáéíóúüÑÁÉÍÓÚÜ',
                                  wiki_start_pages=[u'Wikipedia:Portada']),
+             'Estonian': Language(name='Estonian',
+                                  iso_code='et',
+                                  use_ascii=False,
+                                  charsets=['ISO-8859-13', 'WINDOWS-1257',
+                                            'ISO-8859-4'],
+                                  # C, F, Š, Q, W, X, Y, Z, Ž are only for
+                                  # loanwords
+                                  alphabet=(u'ABDEGHIJKLMNOPRSTUVÕÄÖÜ'
+                                            u'abdeghijklmnoprstuvõäöü'),
+                                  wiki_start_pages=[u'Esileht']),
              'French': Language(name='French',
                                 iso_code='fr',
                                 use_ascii=True,
@@ -149,6 +159,24 @@ LANGUAGES = {'Arabic': Language(name='Arabic',
                                    alphabet=(u'abcdefghijklmnoprstuvzáéíóöőúüű'
                                              u'ABCDEFGHIJKLMNOPRSTUVZÁÉÍÓÖŐÚÜŰ'),
                                    wiki_start_pages=[u'Kezdőlap']),
+             'Lithuanian': Language(name='Lithuanian',
+                                    iso_code='lt',
+                                    use_ascii=False,
+                                    charsets=['ISO-8859-13', 'WINDOWS-1257',
+                                              'ISO-8859-4'],
+                                    # Q, W, and X not used at all
+                                    alphabet=(u'AĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽ'
+                                              u'aąbcčdeęėfghiįyjklmnoprsštuųūvzž'),
+                                    wiki_start_pages=[u'Pagrindinis_puslapis']),
+             'Latvian': Language(name='Latvian',
+                                 iso_code='lv',
+                                 use_ascii=False,
+                                 charsets=['ISO-8859-13', 'WINDOWS-1257',
+                                           'ISO-8859-4'],
+                                 # Q, W, X, Y are only for loanwords
+                                 alphabet=(u'AĀBCČDEĒFGĢHIĪJKĶLĻMNŅOPRSŠTUŪVZŽ'
+                                           u'aābcčdeēfgģhiījkķlļmnņoprsštuūvzž'),
+                                 wiki_start_pages=[u'Sākumlapa']),
              'Polish': Language(name='Polish',
                                 iso_code='pl',
                                 # Q and X are only used for foreign words.
