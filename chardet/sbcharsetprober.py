@@ -26,6 +26,7 @@
 # 02110-1301  USA
 ######################### END LICENSE BLOCK #########################
 
+import logging
 from collections import namedtuple
 
 from .charsetprober import CharSetProber
@@ -39,7 +40,7 @@ SingleByteCharSetModel = namedtuple('SingleByteCharSetModel',
                                      'language_model',
                                      'typical_positive_ratio',
                                      'keep_ascii_letters',
-                                     'alphabet_size'])
+                                     'alphabet'])
 
 
 class SingleByteCharSetProber(CharSetProber):
@@ -59,6 +60,7 @@ class SingleByteCharSetProber(CharSetProber):
         self._total_seqs = None
         self._total_char = None
         self._freq_char = None
+        self.logger = logging.getLogger(__name__)
         self.reset()
 
     def reset(self):
@@ -83,9 +85,10 @@ class SingleByteCharSetProber(CharSetProber):
         if self._name_prober:
             return self._name_prober.language
         else:
-            return self._model.get('language')
+            return self._model.language
 
     def feed(self, byte_str):
+        # TODO: Make filter_international_words keep things in self.alphabet
         if not self._model.keep_ascii_letters:
             byte_str = self.filter_international_words(byte_str)
         if not byte_str:
@@ -93,22 +96,20 @@ class SingleByteCharSetProber(CharSetProber):
         char_to_order_map = self._model.char_to_order_map
         language_model = self._model.language_model
         for char in byte_str:
-            # XXX: Order is in range 1-64, so one would think we want 0-63 here,
-            #      but that leads to 27 more test failures than before.
-            order = char_to_order_map[char]
-            # XXX: This was SYMBOL_CAT_ORDER before, with a value of 250, but
-            #      CharacterCategory.SYMBOL is actually 253, so we use CONTROL
-            #      to make it closer to the original intent. The only difference
-            #      is whether or not we count digits and control characters for
-            #      _total_char purposes.
-            if order < CharacterCategory.CONTROL:
+            order = char_to_order_map.get(char, CharacterCategory.UNDEFINED)
+           # XXX: This was SYMBOL_CAT_ORDER before, with a value of 250, but
+           #      CharacterCategory.SYMBOL is actually 253, so we use CONTROL
+           #      to make it closer to the original intent. The only difference
+           #      is whether or not we count digits and control characters for
+           #      _total_char purposes.
+           if order < CharacterCategory.CONTROL:
                 self._total_char += 1
             # TODO: Follow uchardet's lead and discount confidence for frequent
             #       control characters.
             #       See https://github.com/BYVoid/uchardet/commit/55b4f23971db61
-            if order < self._model.alphabet_size:
+            if order < CharacterCategory.CONTROL:
                 self._freq_char += 1
-                if self._last_order < self._model.alphabet_size:
+                if self._last_order < CharacterCategory.CONTROL:
                     self._total_seqs += 1
                     if not self._reversed:
                         lm_cat = language_model[self._last_order][order]
